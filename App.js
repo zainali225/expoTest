@@ -1,21 +1,42 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { Component } from 'react';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+class App extends Component {
+
+  state = {
+    input: "",
+    names: ["Ali"]
+  }
+
+  addName = () => {
+    this.setState({ names: this.state.names.concat(this.state.input) })
+  }
+
+  render() {
+
+    console.log(getStatusBarHeight());
+    return (
+      <View style={{ flex: 1, alignItems: "center", paddingTop: getStatusBarHeight(),backgroundColor:"#efefef" }}>
+        <StatusBar style="auto" />
+        <TextInput value={this.state.input} onChangeText={(value) => { this.setState({ input: value }) }} placeholder="Enter name" style={{ width: "100%", height: 40, borderWidth: 1, padding: 5, margin: 5 }} />
+        <TouchableOpacity onPress={() => { this.addName() }}
+          style={{ width: "60%", height: 40, backgroundColor: "cyan", alignItems: "center", justifyContent: "center", borderRadius: 20 }}
+        >
+          <Text>Add name</Text>
+        </TouchableOpacity>
+        {
+          this.state.names.map((txt, index) => (
+            <View key={index} style={{ flexDirection: "row", backgroundColor: "lightblue", width: "100%", height: 30, marginVertical: 5, justifyContent: "space-between", paddingHorizontal: 10 }}>
+              <Text  >{txt}</Text>
+              <Text>X</Text>
+            </View>
+          ))
+        }
+      </View>
+    );
+  }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App
