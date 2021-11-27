@@ -2,6 +2,10 @@ import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
+import Accordion from './components/Accordion';
+import DragDrop from './components/DragDrop';
+import TapGestureMenu from './components/TapGestureMenu';
+// import ImageAnim from './zainTest/ImageAnim';
 
 class App extends Component {
 
@@ -16,10 +20,12 @@ class App extends Component {
 
   render() {
 
-    console.log(getStatusBarHeight());
+    return <TapGestureMenu />
+
     return (
-      <View style={{ flex: 1, alignItems: "center", paddingTop: getStatusBarHeight(),backgroundColor:"#efefef" }}>
+      <View style={{ flex: 1, alignItems: "center", paddingTop: getStatusBarHeight(), backgroundColor: "#efefef" }}>
         <StatusBar style="auto" />
+
         <TextInput value={this.state.input} onChangeText={(value) => { this.setState({ input: value }) }} placeholder="Enter name" style={{ width: "100%", height: 40, borderWidth: 1, padding: 5, margin: 5 }} />
         <TouchableOpacity onPress={() => { this.addName() }}
           style={{ width: "60%", height: 40, backgroundColor: "cyan", alignItems: "center", justifyContent: "center", borderRadius: 20 }}
