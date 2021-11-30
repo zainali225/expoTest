@@ -1,6 +1,6 @@
 import React from 'react';
 import { ActivityIndicator, StatusBar, Text, TouchableOpacity, View, StyleSheet } from 'react-native';
-import Animated, { cond, Easing, EasingNode, eq, Extrapolate, interpolate, interpolateNode, Value, debug, set, event, concat } from 'react-native-reanimated';
+import Animated, { cond, Easing, EasingNode, eq, Extrapolate, interpolate, interpolateNode, Value, debug, set, event, concat, or, block, call } from 'react-native-reanimated';
 import { runTiming } from './helper';
 // import { AntDesign } from 'vect';
 import { GestureHandlerRootView, State, TapGestureHandler } from 'react-native-gesture-handler';
@@ -27,23 +27,32 @@ class TapGestureMenu extends React.Component {
             }
         ]);
 
-        this.scale = cond(eq(State.BEGAN, state), [
-            set(scale, runTiming(scale, new Value(1.5),)),
-            scale
+        this.scale = block([cond(or(eq(State.BEGAN, state)), [
+            set(scale, runTiming(scale, new Value(1.3), 100)),
+
         ], [
             cond(eq(State.FAILED, state), [
-                set(scale, runTiming(scale, new Value(1.5),)),
+                set(scale, runTiming(scale, new Value(1), 100)),
 
             ], [
-                set(scale, runTiming(scale, new Value(1),)),
+                cond(eq(State.END, state), [
+                    call([],()=> this.onPress()),
+                    set(state, State.UNDETERMINED),
+                ]),
+                set(scale, runTiming(scale, new Value(1), 100)),
 
             ]),
-            scale
-        ])
+        ]),
+            scale])
+
+
 
 
     }
 
+    onPress = () => {
+        console.log("navigate", new Date())
+    }
 
     render() {
 
@@ -61,12 +70,13 @@ class TapGestureMenu extends React.Component {
 
 
                 <TapGestureHandler
-                    onHandlerStateChange={e => console.log(e.nativeEvent.state)}
-                    onEnded={val=>console.log("ended")}
-                    // onHandlerStateChange={this.onGestureEvent}
+                    // onHandlerStateChange={e => console.log(e.nativeEvent.state)}
+                    // onEnded={val=>console.log("ended")}
+                    onHandlerStateChange={this.onGestureEvent}
                 >
-                    <Animated.Image source={require("../assets/1.jpg")} style={[styles.img, { transform: [{ scale: this.scale }] }]} />
-
+                    <Animated.View style={styles.img} >
+                        <Animated.Image source={require("../assets/1.jpg")} style={[{ width: "100%", height: "100%", transform: [{ scale: this.scale }] }]} />
+                    </Animated.View>
                 </TapGestureHandler>
 
 
@@ -82,7 +92,7 @@ class TapGestureMenu extends React.Component {
 
 const styles = StyleSheet.create({
     img: {
-        width: "90%", height: 100, alignSelf: "center"
+        width: "90%", height: 100, alignItems: "center", overflow: "hidden"
     }
 
 });
