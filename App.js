@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-nativ
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import Accordion from './components/Accordion';
 import DragDrop from './components/DragDrop';
+import MySwiper from './components/MySwiper';
 import TapGestureMenu from './components/TapGestureMenu';
 // import ImageAnim from './zainTest/ImageAnim';
 
@@ -20,7 +21,7 @@ class App extends Component {
 
   render() {
 
-    return <TapGestureMenu />
+    return <MySwiper />
 
     return (
       <View style={{ flex: 1, alignItems: "center", paddingTop: getStatusBarHeight(), backgroundColor: "#efefef" }}>
