@@ -8,12 +8,14 @@ import { wp, hp, runSpring, runTiming } from './helper'
 
 
 const assets = [
+    "https://4kwallpapers.com/images/walls/thumbs_3t/1521.jpg",
     "https://4kwallpapers.com/images/walls/thumbs_3t/1540.jpg",
     "https://4kwallpapers.com/images/walls/thumbs_3t/1506.jpg",
     "https://4kwallpapers.com/images/walls/thumbs_3t/1501.jpg",
-    "https://4kwallpapers.com/images/walls/thumbs_3t/1615.jpg",
-    "https://4kwallpapers.com/images/walls/thumbs_3t/1605.jpg",
+    "https://4kwallpapers.com/images/walls/thumbs_3t/1522.jpg",
+    "https://4kwallpapers.com/images/walls/thumbs_3t/1523.jpg",
 ]
+const WIDTH = wp(100)
 const snapPoints = assets.map((_, index) => index * -wp(100))
 const MIN = 0
 const MAX = -(assets.length - 1) * wp(100)
@@ -49,45 +51,36 @@ class MySwiper extends React.Component {
         this.translateX = cond(
             eq(state, State.ACTIVE),
             [
-                stopClock(clock),
+                // stopClock(clock),
                 set(translationX, add(translationX, offsetX)),
-                cond(and(lessOrEq(translationX, 0), greaterThan(translationX, MAX)), [
-                ], [
-                    cond(lessOrEq(translationX, 0), [
-                        MAX
-                    ], [
-                        0
-                    ])
-                ]),
+
                 translationX
             ],
             [
                 cond(eq(State.END, state),
                     [
-                        set(anim, multiply(add(ceil(divide(translationX, wp(100))), 1), -wp(100))),
-                        set(offsetX, anim),
-                        // runSpring(clock, offsetX, velocityX, new Value(0)),
-                        runTiming(translationX, anim, 300, null, clock),
-                        
-                        debug("trans|", anim),
+                        cond(greaterThan(velocityX, 0),
+                            [
+                                debug("go back", multiply(add(divide(offsetX, WIDTH), 1), WIDTH)),
+                                set(anim, multiply(add(divide(offsetX, WIDTH), 1), WIDTH)),
+                            ],
+                            [
+                                debug("go next", multiply(add(divide(offsetX, WIDTH), -1), WIDTH)),
+                                // runTiming(translationX, multiply(add(divide(offsetX, WIDTH), -1), WIDTH)),
+                                set(anim, multiply(add(divide(offsetX, WIDTH), -1), WIDTH)),
 
-                        cond(and(lessOrEq(offsetX, 0), greaterThan(offsetX, MAX)), 0, [
-                            cond(lessOrEq(offsetX, 0), [
-                                set(offsetX, MAX)
-                            ], [
-                                set(offsetX, 0)
+
                             ]),
-                        ]),
-                        translationX,
-                    ],
-                    translationX,
-                ),
+                        set(offsetX, runTiming(offsetX, anim)),
+                        debug("anim", anim),
+                        // set(offsetX, add(translationX, offsetX)),
+                        // runTiming(offsetX, new Value(0), 200,),
 
-                // set(state, State.UNDETERMINED),
-            ],
+                        // debug("offsetX", divide(offsetX, -WIDTH)),
 
-
-        );
+                    ]),
+                offsetX,
+            ]);
 
 
     }
@@ -96,7 +89,7 @@ class MySwiper extends React.Component {
     render() {
 
         const { states } = this.state
-        // console.log(snapPoints,wp(100))
+        console.log(snapPoints, wp(100))
 
         return (
 
@@ -104,10 +97,8 @@ class MySwiper extends React.Component {
 
 
                 <PanGestureHandler
-                    onGestureEvent={this.onGestureEvent}
-                    onHandlerStateChange={this.onGestureEvent}
-                // onGestureEvent={({ nativeEvent: { state } }) => console.log(states[state])}
-                // onHandlerStateChange={({ nativeEvent: { state } }) => console.log(states[state])}
+                    onGestureEvent={this.onGestureEvent} onHandlerStateChange={this.onGestureEvent}
+                // onGestureEvent={({ nativeEvent: { state } }) => console.log(states[state])} onHandlerStateChange={({ nativeEvent: { state } }) => console.log(states[state])}
                 >
 
                     <Animated.View

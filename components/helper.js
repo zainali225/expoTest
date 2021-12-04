@@ -46,7 +46,7 @@ export function runSpring(clock, value, velocity, dest, damping) {
     ];
 }
 
-export function runTiming(value, dest, duration, ease, clock) {
+export function runTiming(value, dest, duration, clock) {
     const state = {
         finished: new Value(0),
         position: value,
@@ -57,7 +57,7 @@ export function runTiming(value, dest, duration, ease, clock) {
     const config = {
         duration: duration || 1000,
         toValue: dest,
-        easing: ease || EasingNode.linear,
+        easing: EasingNode.linear,
     };
     clock = clock || new Clock()
 
