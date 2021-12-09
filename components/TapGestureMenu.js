@@ -1,6 +1,6 @@
 import React from 'react';
 import { ActivityIndicator, StatusBar, Text, TouchableOpacity, View, StyleSheet } from 'react-native';
-import Animated, { cond, Easing, EasingNode, eq, Extrapolate, interpolate, interpolateNode, Value, debug, set, event, concat, or, block, call } from 'react-native-reanimated';
+import Animated, { cond, Easing, EasingNode, eq, Extrapolate, interpolate, interpolateNode, Value, debug, set, event, concat, or, block, call, Clock, startClock, stopClock } from 'react-native-reanimated';
 import { runTiming } from './helper';
 // import { AntDesign } from 'vect';
 import { GestureHandlerRootView, State, TapGestureHandler } from 'react-native-gesture-handler';
@@ -8,16 +8,18 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 
 class TapGestureMenu extends React.Component {
-
+    
     constructor(props) {
         super(props);
         this.state = {
-            title: props.title || "Title", totalHeight: 100
+            title: props.title || "Title", totalHeight: 100,
+            states: Object.entries(State).reduce((acc, [key, val]) => ({ ...acc, [val]: key }), {})
         }
 
         const scale = new Value(1)
         const state = new Value(State.UNDETERMINED);
         const updated = new Value(1)
+        const clock = new Clock()
 
         this.onGestureEvent = event([
             {
@@ -27,25 +29,18 @@ class TapGestureMenu extends React.Component {
             }
         ]);
 
-        this.scale = block([cond(or(eq(State.BEGAN, state)), [
-            set(scale, runTiming(scale, new Value(1.3), 100)),
+        this.scale = cond(eq(State.BEGAN, state),
+            [
+                set(scale, runTiming(scale, new Value(1.3), 100, null, clock)),
+                scale,
 
-        ], [
-            cond(eq(State.FAILED, state), [
-                set(scale, runTiming(scale, new Value(1), 100)),
+            ],
+            [
+                set(scale, runTiming(scale, new Value(1), 100, null, clock)),
+                scale
+            ]
+        )
 
-            ], [
-                cond(eq(State.END, state), [
-                    call([], () => this.onPress()),
-                    // set(state, State.UNDETERMINED),
-                ]),
-                set(scale, runTiming(scale, new Value(1), 100)),
-
-            ]),
-        ]),
-        // debug("state", state),
-        set(state, State.UNDETERMINED),
-            scale])
 
 
 
@@ -66,14 +61,13 @@ class TapGestureMenu extends React.Component {
         })
 
         return (
-            <View style={{ paddingHorizontal: 20, flex: 1, alignItems: "center" }} >
+            <GestureHandlerRootView style={{ paddingHorizontal: 20, paddingTop: 50 }} >
                 <StatusBar backgroundColor="green" />
                 {/* <ActivityIndicator color="black" /> */}
 
 
                 <TapGestureHandler
-                    // onHandlerStateChange={e => console.log(e.nativeEvent.state)}
-                    // onEnded={val=>console.log("ended")}
+                    // onHandlerStateChange={({ nativeEvent: { state } }) => console.log(state, this.state.states[state])}
                     onHandlerStateChange={this.onGestureEvent}
                 >
                     <Animated.View style={styles.img} >
@@ -85,7 +79,7 @@ class TapGestureMenu extends React.Component {
 
 
 
-            </View>
+            </GestureHandlerRootView>
         )
     }
 
@@ -94,7 +88,7 @@ class TapGestureMenu extends React.Component {
 
 const styles = StyleSheet.create({
     img: {
-        width: "100%", height: 200, overflow: "hidden", borderWidth: 1,
+        width: "90%", height: 200, alignItems: "center", overflow: "hidden"
     }
 
 });

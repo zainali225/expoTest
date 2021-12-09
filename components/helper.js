@@ -14,7 +14,7 @@ export function hp(float) {
     return HEIGHT * float / 100
 }
 
-export function runSpring(clock, value, velocity, dest) {
+export function runSpring(clock, value, velocity, dest, damping) {
     const state = {
         finished: new Value(0),
         velocity: new Value(0),
@@ -23,7 +23,7 @@ export function runSpring(clock, value, velocity, dest) {
     };
 
     const config = {
-        damping: 10,
+        damping: damping || 10,
         mass: 1,
         stiffness: 121.6,
         overshootClamping: false,
@@ -46,7 +46,7 @@ export function runSpring(clock, value, velocity, dest) {
     ];
 }
 
-export function runTiming(value, dest, duration) {
+export function runTiming(value, dest, duration, clock) {
     const state = {
         finished: new Value(0),
         position: value,
@@ -56,10 +56,10 @@ export function runTiming(value, dest, duration) {
 
     const config = {
         duration: duration || 1000,
-        toValue: dest,
+        toValue: new Value(0),
         easing: EasingNode.linear,
     };
-    const clock = new Clock()
+    clock = clock || new Clock()
 
     return block([
         cond(clockRunning(clock), 0, [
