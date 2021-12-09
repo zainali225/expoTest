@@ -36,13 +36,15 @@ class TapGestureMenu extends React.Component {
 
             ], [
                 cond(eq(State.END, state), [
-                    call([],()=> this.onPress()),
-                    set(state, State.UNDETERMINED),
+                    call([], () => this.onPress()),
+                    // set(state, State.UNDETERMINED),
                 ]),
                 set(scale, runTiming(scale, new Value(1), 100)),
 
             ]),
         ]),
+        // debug("state", state),
+        set(state, State.UNDETERMINED),
             scale])
 
 
@@ -64,9 +66,9 @@ class TapGestureMenu extends React.Component {
         })
 
         return (
-            <GestureHandlerRootView style={{ paddingHorizontal: 20 }} >
+            <View style={{ paddingHorizontal: 20, flex: 1, alignItems: "center" }} >
                 <StatusBar backgroundColor="green" />
-                <ActivityIndicator color="black" />
+                {/* <ActivityIndicator color="black" /> */}
 
 
                 <TapGestureHandler
@@ -83,7 +85,7 @@ class TapGestureMenu extends React.Component {
 
 
 
-            </GestureHandlerRootView>
+            </View>
         )
     }
 
@@ -92,7 +94,7 @@ class TapGestureMenu extends React.Component {
 
 const styles = StyleSheet.create({
     img: {
-        width: "90%", height: 100, alignItems: "center", overflow: "hidden"
+        width: "100%", height: 200, overflow: "hidden", borderWidth: 1,
     }
 
 });
