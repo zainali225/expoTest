@@ -51,32 +51,22 @@ class MySwiper extends React.Component {
         this.translateX = cond(
             eq(state, State.ACTIVE),
             [
-                stopClock(clock),
+                // stopClock(clock),
                 set(translationX, add(translationX, offsetX)),
 
-                translationX
+                translationX,
+                debug("anim|offset|state ", concat(anim, "|", offsetX, "|", state)),
+
             ],
             [
                 cond(eq(State.END, state),
                     [
-                        set(offsetX, add(translationX, offsetX)),
-                        cond(greaterThan(velocityX, 0),
-                            [
-                                set(anim, multiply(add(divide(offsetX, WIDTH), 1), WIDTH)),
-                            ],
-                            [
-                                set(anim, multiply(add(divide(offsetX, WIDTH), -1), WIDTH)),
+                        set(anim, multiply(add(divide(offsetX, WIDTH), cond(greaterThan(velocityX, 0), 1, -1)), WIDTH)),
 
-
-                            ]),
-                        set(offsetX, runTiming(offsetX, anim,null,clock)),
-
-                        debug("anim", anim),
-                        // runTiming(offsetX, new Value(0), 200,),
-
-                        // debug("offsetX", divide(offsetX, -WIDTH)),
-
+                        set(offsetX, runTiming(offsetX, anim, 200, clock)),
+                        
                     ]),
+
                 offsetX,
             ]);
 
