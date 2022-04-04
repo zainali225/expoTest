@@ -1,11 +1,12 @@
 import { Dimensions } from "react-native";
 import { clockRunning, debug, Value, set, startClock, cond, stopClock, spring, Easing, block, timing, EasingNode, Clock } from "react-native-reanimated";
+import { getStatusBarHeight } from "react-native-status-bar-height";
 
 
 const HEIGHT = Dimensions.get('window').height
 const WIDTH = Dimensions.get('window').width
 
-
+export const sHeight = getStatusBarHeight()
 
 export function wp(float) {
     return WIDTH * float / 100

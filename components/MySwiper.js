@@ -4,14 +4,11 @@ import { ScrollView, View, TouchableOpacity, Text, StyleSheet, Image, StatusBar 
 
 import { GestureHandlerRootView, PanGestureHandler, State } from 'react-native-gesture-handler'
 import Animated, { add, cond, eq, event, set, Value, debug, Clock, greaterOrEq, lessOrEq, and, or, greaterThan, stopClock, divide, abs, ceil, multiply, floor, concat, startClock } from 'react-native-reanimated';
-import { wp, hp, runSpring, runTiming } from './helper'
+import { wp, hp, runSpring, runTiming } from '../services/helper'
 
 
 const assets = [
-    "https://4kwallpapers.com/images/walls/thumbs_3t/1521.jpg",
-    "https://4kwallpapers.com/images/walls/thumbs_3t/1540.jpg",
-    "https://4kwallpapers.com/images/walls/thumbs_3t/1506.jpg",
-    "https://4kwallpapers.com/images/walls/thumbs_3t/1501.jpg",
+    "https://4kwallpapers.com/images/walls/thumbs_3t/1521.jpg", 
     "https://4kwallpapers.com/images/walls/thumbs_3t/1522.jpg",
     "https://4kwallpapers.com/images/walls/thumbs_3t/1523.jpg",
 ]

@@ -1,7 +1,7 @@
 import React from 'react';
 import { ActivityIndicator, StatusBar, Text, TouchableOpacity, View, StyleSheet } from 'react-native';
 import Animated, { cond, Easing, EasingNode, eq, Extrapolate, interpolate, interpolateNode, Value, debug, set, event, concat, or, block, call, Clock, startClock, stopClock } from 'react-native-reanimated';
-import { runTiming } from './helper';
+import { runTiming } from '../services/helper';
 // import { AntDesign } from 'vect';
 import { GestureHandlerRootView, State, TapGestureHandler } from 'react-native-gesture-handler';
 import { MaterialIcons } from '@expo/vector-icons';

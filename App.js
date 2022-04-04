@@ -21,7 +21,16 @@ class App extends Component {
 
   render() {
 
-    return <MySwiper />
+
+    return <Accordion  >
+      {
+        Array(10).fill().map((_, key) =>
+          <Text {...{ key }} >{++key}</Text>
+        )
+      }
+    </Accordion>
+
+    // return <MySwiper />
 
     return (
       <View style={{ flex: 1, alignItems: "center", paddingTop: getStatusBarHeight(), backgroundColor: "#efefef" }}>
