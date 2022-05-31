@@ -1,90 +1,89 @@
-// @ts-nocheck
-import React from 'react';
-import { Text, View, StatusBar } from 'react-native';
-import Animated, { add, Clock, concat, cond, debug, divide, eq, event, greaterThan, lessThan, multiply, or, set, stopClock, sub, useAnimatedGestureHandler, Value } from 'react-native-reanimated';
-import { PanGestureHandler, State } from "react-native-gesture-handler"
-import { runSpring, runTiming } from '../services/helper';
-const ITEM_SIZE = 30
+
+
+import React, { Component } from 'react';
+import { View, FlatList, Text } from 'react-native';
+import { PanGestureHandler, State, TouchableOpacity } from "react-native-gesture-handler";
+import Animated, { abs, add, call, Clock, concat, cond, debug, divide, eq, event, Extrapolate, greaterThan, interpolateNode, lessThan, modulo, multiply, neq, not, or, round, set, startClock, stopClock, sub, Value } from 'react-native-reanimated';
+
+
+const ITEM_SIZE = 40
+
+
+class Picker extends Component {
+
+    constructor(props) {
+        super(props)
+
+        this.OFFSETS = props.data.map((t, ind) => (ind * ITEM_SIZE) + ITEM_SIZE * 2)
+
+        const { data, onValueChange } = props
+
+        this.scrollState = new Value(State.UNDETERMINED)
+        this.scroll = 0
+
+
+    };
+
+    onScroll = (offset,) => {
+        this.scroll = offset
+
+    };
+
+    onEnd = () => {
+        console.log('onEnd: ', Math.random());
+        // const index = parseInt(this.scroll / ITEM_SIZE)
+        // this.scrollRef.scrollToIndex({ index })
+    };
+
+    scrollToIndex = (index) => {
+        this.scrollRef.scrollToIndex({ index })
+    };
 
 
 
-const Picker = ({ data = [], width = "100%" }) => {
-    const MAX_HEIGHT = (data.length - 3) * ITEM_SIZE
-    const MIN_HEIGHT = ITEM_SIZE * 2
-    console.log('offset: ', "[" + -MAX_HEIGHT + " < x < " + MIN_HEIGHT + "]");
-
-    const offsetY = new Value(0);
-    const state = new Value(State.UNDETERMINED);
-    const transY = new Value(MIN_HEIGHT)
-    const velocityY = new Value(0)
-    const translationY = new Value(0);
-    const clock = new Clock();
-    const onGestureEvent = event([{
-        nativeEvent: {
-            velocityY,
-            state,
-            translationY
-        }
-    }])
-    // const onGestureEvent = ({ nativeEvent: { y, state: s, translationY: tY, velocityY: vY } }) => {
-    //     positionY.setValue(y)
-    //     state.setValue(s)
-    //     translationY.setValue(tY)
-    //     velocityY.setValue(vY)
-    // }
-
-    const translateY = cond(
-        eq(state, State.ACTIVE),
-        [
-            stopClock(clock),
-            set(transY, add(translationY, offsetY)),
-            cond(or(lessThan(transY, -MAX_HEIGHT), greaterThan(transY, MIN_HEIGHT)),
-                [
-                    set(transY, cond(greaterThan(transY, MIN_HEIGHT), MIN_HEIGHT, -MAX_HEIGHT)),
-                ]),
-            transY,
-
-        ],
-        [
-            cond(eq(State.END, state),
-                [
-                    cond(greaterThan(velocityY, 0), [
-                        set(transY, runSpring(clock, transY, velocityY, add(transY, ITEM_SIZE), 20)),
-                    ], [
-                        set(transY, runSpring(clock, transY, velocityY, sub(transY, ITEM_SIZE), 20)),
-
-                    ]),
-                    cond(or(lessThan(velocityY, -MAX_HEIGHT), greaterThan(velocityY, MIN_HEIGHT)),
-                        [
-                            set(transY, cond(greaterThan(transY, MIN_HEIGHT), MIN_HEIGHT, -MAX_HEIGHT)),
-                        ]),
-
-                ]),
-            set(offsetY, transY),
-            transY,
-        ]);
 
 
-    return (
-        <PanGestureHandler
-            // onHandlerStateChange={e => console.log(e.nativeEvent.velocityY)}
-            // onGestureEvent={e => console.log(e.nativeEvent.velocityY)}
-            onHandlerStateChange={onGestureEvent}
-            onGestureEvent={onGestureEvent}
-        >
-            <Animated.View style={{ overflow: "scroll", height: ITEM_SIZE * 5, width }} >
+    render() {
 
-                <View style={{ height: ITEM_SIZE, top: ITEM_SIZE * 2, width: "100%", backgroundColor: "rgba(0,0,0,0.5)", position: "absolute" }} />
-                <Animated.View style={{ transform: [{ translateY }] }}  >
-                    {
-                        data.map(ind =>
-                            <Text style={{ height: ITEM_SIZE }} key={ind} >{ind}</Text>
-                        )
+        let { data = [], width = "100%", selectedValue, onValueChange } = this.props
+
+        data = ["", "", ...data, "", ""]
+        return (
+            <Animated.View style={{ overflow: "hidden", height: ITEM_SIZE * 5, width, backgroundColor: "cyan" }} >
+
+                <Animated.View style={styles.selectedIndex} />
+
+                <FlatList keyExtractor={i => String(Math.random())}
+                    ref={ref => this.scrollRef = ref}
+                    onScroll={e => this.onScroll(e.nativeEvent.contentOffset.y,)}
+                    // onMomentumScrollEnd={e => this.onEnd(e.nativeEvent.contentOffset.y, State.END)}
+                    // onMomentumScrollEnd={this.onEnd}
+                    snapToOffsets={this.OFFSETS}
+                    // onTouchEndCapture={this.onEnd}
+
+                    data={data}
+                    renderItem={({ item: val, index: i }) => <TouchableOpacity activeOpacity={1} onPress={() => this.scrollToIndex(i - 2)} key={val} style={{ height: ITEM_SIZE, backgroundColor: "teal", alignItems: "center", justifyContent: "center", }}>
+                        <Text children={val} style={{ backgroundColor: "red", }} />
+                    </TouchableOpacity>
                     }
-                </Animated.View>
+                />
+
             </Animated.View>
-        </PanGestureHandler>
-    );
-};
+        )
+    }
+
+
+}
+
+
 
 export default Picker;
+
+const styles = {
+    selectedIndex: {
+        // height: ITEM_SIZE, top: ITEM_SIZE * 2, borderRadius: 5, width: "100%",
+        // backgroundColor: "rgba(0,0,0,0.5)", position: "absolute",
+        height: ITEM_SIZE, top: ITEM_SIZE * 2, borderTopWidth: 1, borderBottomWidth: 1, borderLeftWidth: 0, borderRightWidth: 0, width: "100%",
+        position: "absolute", zIndex: 12,
+    }
+}

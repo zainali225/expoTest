@@ -21,7 +21,7 @@ class App extends Component {
     return (
       <View style={{ flex: 1, paddingTop: 100 }} >
         <StatusBar style="auto" backgroundColor='green' />
-        <Picker data={Array(10).fill(null).map((_, i) => i)} />
+        <Picker data={Array(20).fill(null).map((_, i) => i)} />
       </View>
     )
     // return <Accordion  >
