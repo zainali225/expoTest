@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import Picker from './components/Picker';
+import SharedElement from './components/SharedElement';
 // import ImageAnim from './zainTest/ImageAnim';
 
 class App extends Component {
@@ -18,12 +19,14 @@ class App extends Component {
 
   render() {
 
-    return (
-      <View style={{ flex: 1, paddingTop: 100 }} >
-        <StatusBar style="auto" backgroundColor='green' />
-        <Picker data={Array(20).fill(null).map((_, i) => i)} />
-      </View>
-    )
+
+    return <SharedElement  />
+    // return (
+    //   <View style={{ flex: 1, paddingTop: 100 }} >
+    //     <StatusBar style="auto" backgroundColor='green' />
+    //     <Picker data={Array(20).fill(null).map((_, i) => i)} />
+    //   </View>
+    // )
     // return <Accordion  >
     //   {
     //     Array(10).fill().map((_, key) =>
