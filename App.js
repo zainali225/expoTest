@@ -1,11 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
-import Accordion from './components/Accordion';
-import DragDrop from './components/DragDrop';
-import MySwiper from './components/MySwiper';
-import TapGestureMenu from './components/TapGestureMenu';
+import Picker from './components/Picker';
 // import ImageAnim from './zainTest/ImageAnim';
 
 class App extends Component {
@@ -21,14 +18,19 @@ class App extends Component {
 
   render() {
 
-
-    return <Accordion  >
-      {
-        Array(10).fill().map((_, key) =>
-          <Text {...{ key }} >{++key}</Text>
-        )
-      }
-    </Accordion>
+    return (
+      <View style={{ flex: 1, paddingTop: 100 }} >
+        <StatusBar style="auto" backgroundColor='green' />
+        <Picker data={Array(20).fill(null).map((_, i) => i)} />
+      </View>
+    )
+    // return <Accordion  >
+    //   {
+    //     Array(10).fill().map((_, key) =>
+    //       <Text {...{ key }} >{++key}</Text>
+    //     )
+    //   }
+    // </Accordion>
 
     // return <MySwiper />
 
